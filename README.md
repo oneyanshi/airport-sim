@@ -1,2 +1,2 @@
-# algo-struct
-For CSC-520, Algorithms &amp; Data Structures 
+# Airport simulation
+For CSC-520 
