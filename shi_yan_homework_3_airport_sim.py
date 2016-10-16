@@ -44,6 +44,9 @@ class PriorityQueue:
     def insert(self, item):
         self.items.append(item)
 
+    def __len__(self):
+        return len(self.items)
+
     def remove(self):
         maxi = 0
         for i in range(1, len(self.items)):
@@ -84,32 +87,41 @@ timeToTakeOff = 0
 timePassed = 0
 averageTakeOffTime = 0
 averageWaitTime = 0
+time = 1200
 
-# while timePassed != simTime:
-chance = random.randint(0, 1)
-if(chance < 5):
-    totalLandingAirplanes = [Airplane(random.choice(airlineCarriers), id = random.randrange(0, 50, 2),
-                waitTime=random.randint(1, 20)) for i in range(0, random.randint(1, 3))]
-    for plane in totalLandingAirplanes:
-        landing.insert(plane)
+while timePassed != simTime:
+    if(random.randint(0, 5) < 5):
+        totalLandingAirplanes = [Airplane(random.choice(airlineCarriers), id = random.randrange(2, 50, 2),
+                    waitTime=random.randint(1, 20)) for i in range(3)]
+        for plane in totalLandingAirplanes:
+            landing.insert(plane)
 
-if(chance < 5):
-    totalTakeoffPlanes = [Airplane(random.choice(airlineCarriers), id = random.randrange(0, 50, 2),
-                        waitTime = random.randint(1, 20)) for i in range(0, random.randint(1, 3))]
-    for plane in totalTakeoffPlanes:
-        takeoff.insert(plane)
+    if(random.randint(0, 5) < 5):
+        totalTakeoffPlanes = [Airplane(random.choice(airlineCarriers), id = random.randrange(2, 50, 2),
+                            waitTime = random.randint(1, 20)) for i in range(3)]
+        for plane in totalTakeoffPlanes:
+            takeoff.insert(plane)
 
-if hold.is_empty:
-    if not landing.is_empty():
-        hold.insert(landing.remove())
-        planesLanded = planesLanded + 1
-        timePassed = timePassed + 5
-        print "Landing: " + landing.remove().airline + " " + str(landing.remove().id)
-        timePassed += 5
+    if hold.is_empty:
+        if not landing.is_empty():
+            hold.insert(landing.remove())
+            planesLanded = planesLanded + 1
+            timePassed = timePassed + 5
+            timePassed += 5
+            time = time + 5
+            print "LANDING: " + landing.remove().airline + " " + str(landing.remove().id)
+            print "The time is " + str(time)
+            print "Waiting to land: " + str(len(landing))
+            print "Waiting to take off: " + str(len(takeoff))
+            
 
-    elif not takeoff.is_empty():
-        hold.insert(takeoff.remove())
-        planesTakeOff = planesTakeOff + 1
-        timePassed = timePassed + 5
-        print "Takeoff: " + takeoff.remove().airline + " " + str(takeoff.remove().id)
-        timePassed += 5
+        elif not takeoff.is_empty():
+            hold.insert(takeoff.remove())
+            planesTakeOff = planesTakeOff + 1
+            timePassed = timePassed + 5
+            print "TAKEOFF: " + takeoff.remove().airline + " " + str(takeoff.remove().id)
+            timePassed += 5
+            time = time + 5
+            print "The time is " + str(time)
+            print "Waiting to land: " + str(len(landing))
+            print "Waiting to take off: " + str(len(takeoff))
