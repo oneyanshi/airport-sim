@@ -68,27 +68,48 @@ class Airplane:
 '''Queue Constructors'''
 landing = PriorityQueue() # landing queue
 takeoff = PriorityQueue() # takeoff queue
-
-''' Statistics '''
-planeLanded = 0
-planesTakeOff = 0
-simTime = 120
-timeToLand = 5
-timeToTakeOff = 4
-timePassed = 0
-averageTakeOffTime = 0
-averageWaitTime = 0
+hold = PriorityQueue() # runway queue
 
 '''Airlines'''
 airlineCarriers = ["Japan Airlines", "American Airlines", "Air China", "JetBlue", "British Airways",
                     "Gulf Air", "Frontier", "Virgin Airlines", "SnakePlane"]
 
-def simulate():
-    if timePassed != simTime:
-        totalAirplanes = [Airplane(random.choice(airlineCarriers), id = random.randrange(0, 50, 2),
-                        waitTime=random.randint(0, 20)) for i in range(random.randint(0, 3))]
 
+''' Statistics '''
+planesLanded = 0
+planesTakeOff = 0
+simTime = 120
+timeToLand = 0
+timeToTakeOff = 0
+timePassed = 0
+averageTakeOffTime = 0
+averageWaitTime = 0
 
+# while timePassed != simTime:
+chance = random.randint(0, 1)
+if(chance < 5):
+    totalLandingAirplanes = [Airplane(random.choice(airlineCarriers), id = random.randrange(0, 50, 2),
+                waitTime=random.randint(1, 20)) for i in range(0, random.randint(1, 3))]
+    for plane in totalLandingAirplanes:
+        landing.insert(plane)
 
+if(chance < 5):
+    totalTakeoffPlanes = [Airplane(random.choice(airlineCarriers), id = random.randrange(0, 50, 2),
+                        waitTime = random.randint(1, 20)) for i in range(0, random.randint(1, 3))]
+    for plane in totalTakeoffPlanes:
+        takeoff.insert(plane)
 
-simulate()
+if hold.is_empty:
+    if not landing.is_empty():
+        hold.insert(landing.remove())
+        planesLanded = planesLanded + 1
+        timePassed = timePassed + 5
+        print "Landing: " + landing.remove().airline + " " + str(landing.remove().id)
+        timePassed += 5
+
+    elif not takeoff.is_empty():
+        hold.insert(takeoff.remove())
+        planesTakeOff = planesTakeOff + 1
+        timePassed = timePassed + 5
+        print "Takeoff: " + takeoff.remove().airline + " " + str(takeoff.remove().id)
+        timePassed += 5
