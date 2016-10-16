@@ -81,22 +81,26 @@ airlineCarriers = ["Japan Airlines", "American Airlines", "Air China", "JetBlue"
 ''' Statistics '''
 planesLanded = 0
 planesTakeOff = 0
-simTime = 120
+simTime = 7200
 timeToLand = 0
 timeToTakeOff = 0
 timePassed = 0
-averageTakeOffTime = 0
-averageWaitTime = 0
-time = 1200
+seconds = 43200
+officialTime = 0
+
+def humanize_time(seconds):
+    mins, seconds = divmod(seconds, 60)
+    hours, mins = divmod(mins, 60)
+    return "%02d:%02d:%02d" % (hours, mins, seconds)
 
 while timePassed != simTime:
-    if(random.randint(0, 5) < 5):
+    if(random.randint(0, 5) < 3):
         totalLandingAirplanes = [Airplane(random.choice(airlineCarriers), id = random.randrange(2, 50, 2),
                     waitTime=random.randint(1, 20)) for i in range(3)]
         for plane in totalLandingAirplanes:
             landing.insert(plane)
 
-    if(random.randint(0, 5) < 5):
+    if(random.randint(0, 5) < 4):
         totalTakeoffPlanes = [Airplane(random.choice(airlineCarriers), id = random.randrange(2, 50, 2),
                             waitTime = random.randint(1, 20)) for i in range(3)]
         for plane in totalTakeoffPlanes:
@@ -106,22 +110,20 @@ while timePassed != simTime:
         if not landing.is_empty():
             hold.insert(landing.remove())
             planesLanded = planesLanded + 1
-            timePassed = timePassed + 5
-            timePassed += 5
-            time = time + 5
+            timePassed += 300
+            seconds += 300
             print "LANDING: " + landing.remove().airline + " " + str(landing.remove().id)
-            print "The time is " + str(time)
+            print "The time is " + humanize_time(seconds)
             print "Waiting to land: " + str(len(landing))
             print "Waiting to take off: " + str(len(takeoff))
-            
+
 
         elif not takeoff.is_empty():
             hold.insert(takeoff.remove())
             planesTakeOff = planesTakeOff + 1
-            timePassed = timePassed + 5
+            timePassed += 300
+            seconds += 300
             print "TAKEOFF: " + takeoff.remove().airline + " " + str(takeoff.remove().id)
-            timePassed += 5
-            time = time + 5
-            print "The time is " + str(time)
+            print "The time is " + humanize_time(seconds)
             print "Waiting to land: " + str(len(landing))
             print "Waiting to take off: " + str(len(takeoff))
